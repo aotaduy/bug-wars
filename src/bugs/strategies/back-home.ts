@@ -1,7 +1,5 @@
-import Vector2 = Phaser.Math.Vector2;
 import {BugStrategy} from "./bug-strategy";
 import Bug from "../bug";
-import {WanderAround} from "./wander-around";
 import {FixedTargetStrategy} from "./fixed-target";
 
 export  class BackHomeStrategy extends FixedTargetStrategy {

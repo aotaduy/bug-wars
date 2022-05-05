@@ -7,7 +7,7 @@ import {HealthBar} from "../accesories/health-bar";
 
 export default class Bug extends Phaser.GameObjects.Sprite {
 
-    strategy: BugStrategy = new WanderAround()
+    strategy: BugStrategy;
     defaultSpeed = 40;
     player: HumanPlayer
     food: number = 0;
@@ -18,6 +18,8 @@ export default class Bug extends Phaser.GameObjects.Sprite {
         super(scene, x, y, texture)
         this.setFlipX(true)
         this.healthBar = new HealthBar(scene, this)
+        this.strategy = new WanderAround(this.defaultSpeed)
+
     }
     setTarget(point: Vector2) {
 

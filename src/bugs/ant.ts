@@ -22,11 +22,11 @@ export default class Ant extends Bug
     }
 
     collisionWith(bug: Bug){
-        if (bug instanceof Spider) {
-            this.turnAround()
-        }
         if (bug.player === this.player) {
             return
+        }
+        if (bug instanceof Spider) {
+            this.turnAround()
         }
         bug.setLife(bug.life - 5)
         this.bumpOnMyDirection(bug)

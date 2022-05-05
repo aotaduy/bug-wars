@@ -21,7 +21,7 @@ export abstract class FixedTargetStrategy extends BugStrategy{
     }
 
     public targetReached(bug: Bug) {
-        bug.setStrategy(new WanderAround());
+        bug.setStrategy(new WanderAround(bug.defaultSpeed));
     }
 
     private hasReachedTarget(bug: Bug) {
