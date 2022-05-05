@@ -38,9 +38,10 @@ export default class Ant extends Bug
         if (!this.carriesFood()) {
             this.food = 10;
             plant.life = plant.life - this.food;
+            this.strategy = new BackHomeStrategy(new FixedTargetPointStrategy(new Vector2(plant.x, plant.y)))
+        } else {
+            this.turnAround()
         }
-        this.strategy = new BackHomeStrategy(new FixedTargetPointStrategy(new Vector2(plant.x, plant.y)))
-
     }
 
     private carriesFood() {
