@@ -15,7 +15,7 @@ export default class CpuPlayer extends HumanPlayer {
     update(t: number,  scene: Demo) {
         this.t0 = this.t0 || t;
         const dt = t - this.t0;
-        if (dt > 2000) {
+        if (dt > 4000) {
             this.t0 = t;
             const rnd = Phaser.Math.RND
             scene.createPlayerBug(

@@ -3,7 +3,7 @@ import Bug from "../bugs/bug";
 export default class Plant extends Phaser.GameObjects.Sprite
 {
 
-    life = 10
+    life = 60
     colorAnimation = null
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string)
     {
@@ -20,6 +20,7 @@ export default class Plant extends Phaser.GameObjects.Sprite
                 repeat: 4
             })
         }
+        this.setScale(this.life / 60, this.life / 60)
         bug.collisionWithPlant(this);
         if (this.life<= 0) {
             this.destroy()

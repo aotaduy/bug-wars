@@ -11,7 +11,7 @@ export abstract class FixedTargetStrategy extends BugStrategy{
             return this.targetReached(bug)
         }
         const randomDataGenerator = Phaser.Math.RND
-        const noiseSensitivity = 50;
+        const noiseSensitivity = 30;
         const noise = randomDataGenerator.rotation() / noiseSensitivity
         const rotation = Phaser.Math.Angle.Between(bug.x,bug.y, this.getTargetPoint(bug).x, this.getTargetPoint(bug).y) + noise
         bug.setRotation(rotation)

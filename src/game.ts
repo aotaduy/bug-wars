@@ -51,7 +51,13 @@ export default class Demo extends Phaser.Scene
         this.createPlants(plants)
         this.input.on('pointerup', (pointer) => this.createPlayerBug(this.player(), pointer.x, pointer.y, this.currentTool.name))
         eventBus.on(toolChangedEvent, this.changeTool, this)
-
+        this.time.addEvent({
+            delay: 25000,                // ms
+            callback: () => this.createPlants(plants),
+            //args: [],
+            callbackScope: this,
+            repeat: 4
+        });
     }
     update(t, dt) {
         this.cpuPlayer().update(t, this)
@@ -79,10 +85,10 @@ export default class Demo extends Phaser.Scene
 
 
     private createPlants(plants) {
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
             const rnd = Phaser.Math.RND
-            plants.get(rnd.integerInRange(200, 800), rnd.integerInRange(100,360), 'plant1')
-            plants.get(rnd.integerInRange(200, 800), rnd.integerInRange(100,360), 'plant2')
+            plants.get(rnd.integerInRange(200, 700), rnd.integerInRange(100,360), 'plant1')
+            plants.get(rnd.integerInRange(200, 700), rnd.integerInRange(100,360), 'plant2')
 
         }
     }
