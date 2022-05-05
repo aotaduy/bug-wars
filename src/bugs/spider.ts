@@ -11,8 +11,8 @@ export default class Spider extends Bug
     {
         super(scene, x, y, texture)
         this.setFlipX(true)
-        this.defaultSpeed = 1
-        this.strategy = new WanderAround(this.defaultSpeed, 100)
+        this.defaultSpeed = 2
+        this.strategy = new WanderAround(this.defaultSpeed, 200)
         this.life = 80
    /*     this.anims.create({
             key: 'spider-animation',
@@ -46,6 +46,7 @@ export default class Spider extends Bug
             repeat: 4
         })
         bug.setLife(bug.life - 10)
+        this.setLife(this.life + 2)
        // this.bumpOnMyDirection(bug)
         if (bug.life <= 0) {
             bug.destroy()

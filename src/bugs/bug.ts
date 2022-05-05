@@ -51,7 +51,7 @@ export default class Bug extends Phaser.GameObjects.Sprite {
     }
 
     setLife(life: number) {
-        this.life = life;
+        this.life = life > this.maxLife ? this.maxLife : life;
         this.healthBar.setValue(this.life / this.maxLife * 100)
     }
 }
