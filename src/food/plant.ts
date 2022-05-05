@@ -1,15 +1,16 @@
+import Bug from "../bugs/bug";
+
 export default class Plant extends Phaser.GameObjects.Sprite
 {
 
-    life = 100
+    life = 10
     colorAnimation = null
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string)
     {
         super(scene, x, y, texture)
     }
 
-    collisionWithBug(bug){
-        this.life = this.life - 10;
+    collisionWithBug(bug: Bug){
         if (!this.colorAnimation) {
             this.colorAnimation = this.scene.tweens.add({
                 targets: this,
@@ -19,7 +20,7 @@ export default class Plant extends Phaser.GameObjects.Sprite
                 repeat: 4
             })
         }
-        bug.turnAround();
+        bug.collisionWithPlant(this);
         if (this.life<= 0) {
             this.destroy()
         }

@@ -21,6 +21,13 @@ export default class Spider extends Bug
         bug.setAlpha(bug.alpha - 0.02)
         this.setTint(0xff0000)
         this.setAlpha(Math.min(this.alpha + 0.01, 1) )
+        this.scene.tweens.add({
+            targets: bug,
+            x: '+=3',
+            duration: 80,
+            yoyo: true,
+            repeat: 4
+        })
         if (bug.alpha <= 0.2) {
             bug.destroy()
         }

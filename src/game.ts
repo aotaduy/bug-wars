@@ -1,19 +1,17 @@
 import 'phaser';
-import Beetle from "./bugs/beetle";
-import Spider from "./bugs/spider";
 import Plant from "./food/plant";
-import Ant from "./bugs/ant";
+import eventBus, {toolChangedEvent} from "./event-bus";
+import {bugTypes} from "./constants/bug-types.constants";
+import GameUI from "./game-ui";
+import HumanPlayer from "./player/player";
+import CpuPlayer from "./player/cpu-player";
+import Vector2 = Phaser.Math.Vector2;
 
-const bugTypes = [
-    {name: 'beetle', type: Beetle, frameSize: {frameHeight: 48, frameWidth: 38} },
-    {name: 'ant', type: Ant, frameSize: {frameHeight: 32, frameWidth: 32} },
-    {name: 'spider', type: Spider,frameSize: {frameHeight: 64, frameWidth: 64} },
-]
+
 export default class Demo extends Phaser.Scene
 {
     bugs
     private currentTool;
-    private buttons: Phaser.GameObjects.Sprite[];
     constructor ()
     {
         super('demo');
@@ -31,8 +29,9 @@ export default class Demo extends Phaser.Scene
 
     create ()
     {
+        this.createPLayers()
+        this.scene.launch('gameUI')
         this.add.image(500, 240, 'dirt-background').setAlpha(0.5);
-        this.addButtons()
         this.physics.world.setBounds(100, 0, 700, 480);
         this.bugs = bugTypes.map(each => this.physics.add.group({
             name: each.name,
@@ -48,22 +47,27 @@ export default class Demo extends Phaser.Scene
         this.physics.add.collider(this.bugs, plants, this.bugCollisionPlant)
         this.physics.world.on('worldbounds', this.onWorldBounds)
         this.physics.add.overlap(this.bugs, this.bugs, (bug1, bug2) => this.handleCollision(bug1, bug2) )
-        this.physics.add.collider(this.bugs, this.bugs)
+        //this.physics.add.collider(this.bugs, this.bugs)
         this.createPlants(plants)
-        this.input.on('pointerup', (pointer) => this.createBug(pointer))
+        this.input.on('pointerup', (pointer) => this.createPlayerBug(this.player(), pointer.x, pointer.y, this.currentTool.name))
+        eventBus.on(toolChangedEvent, this.changeTool, this)
 
     }
-    update() {
+    update(t, dt) {
+        this.cpuPlayer().update(t, this)
     }
     bugCollisionPlant(bug, plant){
         plant.collisionWithBug(bug)
     }
-    private createBug(pointer) {
-        if (pointer.x < 100) {
+    createPlayerBug(player, x, y, name) {
+        if (x < 100) {
             return
         }
-        const group = this.bugs.find(each => each.name === this.currentTool.name)
-        const newBug = group.get(pointer.x, pointer.y, this.currentTool.name);
+        const group = this.bugs.find(each => each.name === name)
+        const newBug = group.get(player.home.x, player.home.y, name);
+        newBug.player = player
+        newBug.setTint(player.tint)
+        newBug.setTarget(new Vector2(x, y))
         newBug.body.onWorldBounds = true
     }
 
@@ -71,21 +75,8 @@ export default class Demo extends Phaser.Scene
         bug1.collisionWith(bug2)
     }
 
-    private addButtons() {
-        this.buttons = bugTypes.map((each, index) =>  this.addButton(each, index))
-            }
 
-    private addButton(each, index) {
-        const button = this.add.sprite(30, 20 + 32 + index * 64, each.name ).setInteractive()
-        button.on('pointerup', (sprite) => this.selectTool( button, each))
-        return button
-    }
 
-    private selectTool(sprite, each) {
-        this.currentTool = each;
-        this.buttons.forEach(each => each.clearTint())
-        sprite.setTint(0xff7777)
-    }
 
     private createPlants(plants) {
         for (let i = 0; i < 5; i++) {
@@ -99,15 +90,33 @@ export default class Demo extends Phaser.Scene
     private onWorldBounds(body) {
         body.gameObject.turnAround()
     }
+
+    private changeTool(tool) {
+        console.log(tool)
+        this.currentTool = tool
+
+    }
+
+    private createPLayers() {
+        this.registry.set('player', new HumanPlayer(this))
+        this.registry.set('cpu', new CpuPlayer(this))
+    }
+
+    private player(): HumanPlayer {
+        return this.registry.get('player')
+    }
+    private cpuPlayer(): CpuPlayer {
+        return this.registry.get('cpu')
+    }
 }
 
 const config = {
     type: Phaser.AUTO,
-    backgroundColor: '#4f5f51',
+    backgroundColor: '#9f9f91',
     width: 800,
     height: 480,
     mode: Phaser.Scale.FIT,
-    scene: Demo,
+    scene: [Demo, GameUI ],
     scale: {
         zoom: 1.1
     },

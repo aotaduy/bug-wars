@@ -1,5 +1,6 @@
 import Bug from "./bug";
 import Spider from "./spider";
+import {FixedTargetPointStrategy} from "./strategies/fixed-target-point";
 
 
 export default class Beetle extends Bug
@@ -9,27 +10,17 @@ export default class Beetle extends Bug
     {
         super(scene, x, y, texture)
         this.setFlipX(true)
+        this.defaultSpeed = 30
     }
 
     collisionWith(bug){
         if (bug instanceof Spider) {
             this.turnAround()
         }
-
     }
-    update(t: number, dt: number)
-    {
-        const rnd = Phaser.Math.RND
-        if (rnd.integerInRange(0,10) > 6) {
-            const rotation = this.rotation + rnd.rotation() / 20
-            this.setRotation(rotation)
-            const body = this.body as Phaser.Physics.Arcade.Body
-            const velocity = this.scene.physics.velocityFromRotation(rotation, 40)
-            body.setVelocity(velocity.x, velocity.y)
-
-        }
-     //   this.x = this.x - Math.cos(this.rotation)
-       //  this.y = this.y - Math.sin(this.rotation)
+    setTarget(point: Phaser.Math.Vector2) {
+        const rotation = Phaser.Math.Angle.Between(this.x, this.y, point.x, point.y)
+        this.setRotation(rotation)
     }
 }
 
